@@ -2,7 +2,7 @@ const express = require('express');
 const router = new express.Router();
 const colorsObj = require('../colors.json');
 
-/* GET home page. */
+// GET route1
 router.get('/route1', (req, res, next) => {
   res.render('route1', { title: 'Express' });
 });
@@ -26,15 +26,18 @@ router.get('/route2/:color', (req, res, next) => {
       jsonMatch = color;
     }
   });
-  // this is here because if we try to return res.json inside the loop,
-  // it will attempt to set/write the header multiple times
-  // which throws this error: Error [ERR_HTTP_HEADERS_SENT]
-  // So first we find a match, store it in the jsonMatch Variable
-  // if it is defined, we RETURN the res.json so it doesn't continue
-  // executing other middleware or attempt to set the headers again
+  /*
+  this is here because if we try to return res.json inside the loop,
+  it will attempt to set/write the header multiple times
+  which throws this error: Error [ERR_HTTP_HEADERS_SENT]
+  So first we find a match, store it in the jsonMatch Variable
+  if it is defined, we RETURN res.json so it doesn't continue
+   executing other middleware or attempt to set the headers again
+   */
   if (jsonMatch) {
     return res.json(jsonMatch);
   }
+  // if there are no matches, pass along to error/404 handlers
   next();
 });
 
